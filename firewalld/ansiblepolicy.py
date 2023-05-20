@@ -56,7 +56,7 @@ list_of_policies = []
 list_of_configurations = []
 
 # Dieser Schritt liest die policies.csv Datei ein, initialisiert für jede Regel ein entsprechendes Objekt und fügt sie der entsprechenden Liste hinzu.
-with open('/home/student921/ansible-security/workspace/firewalld/Ansible/firewalld/policies.csv', newline='') as csvfile:
+with open('/home/student921/ansible-security/workspace/firewalld/presentation/firewalld/policies.csv', newline='') as csvfile:
     csv_reader = DictReader(csvfile)
     for row in csv_reader:
         new_policy = policy(
@@ -72,7 +72,7 @@ with open('/home/student921/ansible-security/workspace/firewalld/Ansible/firewal
         list_of_policies.append(new_policy)
         
 # Dieser Schritt liest die configure-firewalld.yml Datei ein, initialisiert für jeden Task ein entsprechendes Objekt und fügt sie der entsprechenden Liste hinzu.
-with open('/home/student921/ansible-security/workspace/firewalld/Ansible/firewalld/configure-firewalld.yml', 'r') as stream:
+with open('/home/student921/ansible-security/workspace/firewalld/presentation/firewalld/configure-firewalld.yml', 'r') as stream:
     try:
     # Konvertiere das geöffnete Dokument zu einem Python Objekt.
         d=yaml.load(stream, Loader=yaml.BaseLoader)
