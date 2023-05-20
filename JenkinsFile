@@ -1,0 +1,52 @@
+Jenkinsfile (Declarative Pipeline)
+pipeline {
+    agent any
+
+    stages {
+        stage('Cloning/Pulling from Repository') {
+           steps {
+                
+                script {
+                    
+                    if (fileExists('./presentation')) {
+                    sh "cd presentation && git pull"
+                    } else {
+                        sh "git clone 'https://github.com/student921/presentation.git'"
+                    
+                    }
+                }
+            }
+        }
+        stage('Pre-Deployment Test: Static Code Analysis') {
+            steps {
+                script {
+                    def return_value = sh(returnStatus: true, script: 'python presentation/firewalld/ansiblepolicy.py')
+                    if (return_value == 1) {
+                        input message: 'Es wurden mögliche Sicherheitsprobleme identifiziert, möchten Sie fortfahren?', ok: 'Weiter'
+                    }
+                }
+            }
+        }
+        stage('Deployment') {
+            steps {
+                sh "ansible-playbook -i presentation/firewalld/hosts presentation/firewalld/configure-firewalld.yml"
+            }    
+        }
+        stage('Post-Deployment-Test: Nmap Portscan from Zone internal') {
+            steps {
+                
+                sh 'sudo nmap -vv -sV -T5 $(grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" presentation/firewalld/hosts)'
+                
+            }    
+        }
+        stage('Post-Deployment-Test: Nmap Portscan from Zone public') {
+            steps {
+                
+                sh 'sudo ip addr add 192.168.180.160/24 dev eth0 || true'
+                
+                sh 'sudo nmap -vv -sV -T5 -S 192.168.180.160 $(grep -E -o "(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)" presentation/firewalld/hosts)'
+                
+            }    
+        }
+    }
+}
