@@ -48,8 +48,7 @@
         permanent: true
         state: enabled
         icmp_block_inversion: true
-        
-        
+
   - name: Restart Firewalld.
     ansible.builtin.service:
         name: firewalld
