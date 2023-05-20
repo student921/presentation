@@ -1,0 +1,55 @@
+---
+- name: Implementing Firewalld Module for Linux Server.
+  hosts: linux
+  become: true
+  
+  tasks:
+  - name: Install Firewalld.
+    ansible.builtin.apt:
+       name: firewalld
+       state: latest
+       
+  - name: Start Firewalld.
+    ansible.builtin.service:  
+       name: firewalld
+       state: started
+       
+  - name: Firewalld - Enable https for Zone public.
+    ansible.posix.firewalld:
+        zone: public
+        service: "https"
+        permanent: true
+        state: enabled
+        
+  - name: Firewalld - Disable http for Zone public.
+    ansible.posix.firewalld:
+        zone: public
+        service: "http"
+        permanent: true
+        state: disabled
+       
+  - name: Firewalld - Disable SSH for Zone public.
+    ansible.posix.firewalld:
+        zone: public
+        service: ssh
+        permanent: true
+        state: disabled
+        
+  - name: Firewalld - Enable internal services only for the Ansible Security Tower.
+    ansible.posix.firewalld:
+        zone: internal
+        source: 192.168.180.189
+        permanent: true
+        state: enabled
+        
+  - name: Firewalld - Disable ICMP.
+    ansible.posix.firewalld:
+        zone: public
+        permanent: true
+        state: enabled
+        icmp_block_inversion: true
+        
+  - name: Restart Firewalld.
+    ansible.builtin.service:
+        name: firewalld
+        state: restarted

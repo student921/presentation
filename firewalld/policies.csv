@@ -1,0 +1,6 @@
+name,zone,service,source,permanent,state,icmp_block_inversion,security_message
+Enable internal services for Ansible Security Tower.,internal,,192.168.180.189,true,enabled,,Internal Services not permanently enabled for Host: Ansible Security Tower with IP: 192.168.180.189.
+Enable https for Zone public.,public,https,,true,enabled,,Service https not permanently enabled for Zone public. Connections with webservices should be encrypted.
+Disable SSH for Zone public.,public,ssh,,true,disabled,,SSH for Zone public not permanently disabled. SSH should not be accessible for public clients.
+Disable http for Zone public.,public,http,,true,disabled,,Service http not permanently disabled for Zone public. Avoid unencrypted connections to other hosts.
+Disable ICMP for Zone public.,public,,,true,enabled,true,ICMP-Messages are not permanently disabled for Zone public. Disable to minimize risk of Denial Of Serivce.
