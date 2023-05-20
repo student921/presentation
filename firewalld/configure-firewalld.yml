@@ -38,7 +38,7 @@
   - name: Firewalld - Enable internal services only for the Ansible Security Tower.
     ansible.posix.firewalld:
         zone: internal
-        source: 192.168.180.182
+        source: 192.168.180.189
         permanent: true
         state: enabled
         
