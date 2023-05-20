@@ -42,6 +42,7 @@
         permanent: true
         state: enabled
         
+        
   - name: Firewalld - Disable ICMP.
     ansible.posix.firewalld:
         zone: public
